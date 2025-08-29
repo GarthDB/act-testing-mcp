@@ -24,10 +24,7 @@ This guide walks you through setting up branch protections for the `main` branch
    - ✅ **Require status checks to pass before merging**
      - ✅ Require branches to be up to date before merging
      - **Required status checks:**
-       - `test` (from CI workflow)
-       - `Check formatting` (from CI workflow)
-       - `Run tests with coverage` (from CI workflow)
-       - `Check act compatibility` (from CI workflow)
+       - `CI Tests and Checks` (main CI workflow job)
    - ✅ **Require conversation resolution before merging**
    - ✅ **Require signed commits** (optional but recommended)
    - ✅ **Require linear history** (optional, prevents merge commits)
@@ -75,6 +72,43 @@ After setting up these protections:
 - Stale reviews are dismissed when new commits are pushed
 
 This ensures code quality and prevents accidental breaking changes to the main branch.
+
+## Troubleshooting Status Checks
+
+If you can't find the status checks when setting up branch protection:
+
+### Common Issues
+
+1. **Status Checks Not Registered**
+   - GitHub needs to "register" status checks before they appear in the list
+   - **Solution**: Create a PR and let the workflows run at least once
+
+2. **Incorrect Job Names**
+   - Status checks appear by their job `name` field, not the job ID
+   - **Current job name**: `CI Tests and Checks` (search for this exact text)
+   - Names are case-sensitive
+
+3. **Cache Issues**
+   - Browser cache might show outdated information
+   - **Solution**: Clear browser cache or try a different browser
+
+### Steps to Register Status Checks
+
+1. **Create a test PR**:
+
+   ```bash
+   git checkout -b test-status-checks
+   echo "# Test" >> README.md
+   git add README.md
+   git commit -m "test: trigger status checks"
+   git push -u origin test-status-checks
+   gh pr create --title "Test: Register status checks" --body "Testing status check registration"
+   ```
+
+2. **Wait for workflows to complete**
+3. **Go back to branch protection settings**
+4. **Search for**: `CI Tests and Checks`
+5. **Close the test PR** after status checks are registered
 
 ## Testing the Protection
 
